@@ -71,3 +71,6 @@
 
 ## git checkout 分支名
 1. 切换分支
+
+## git merge 分支名
+1. 合并分支
