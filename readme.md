@@ -33,4 +33,7 @@
 ## git diff 文件名
 1. 查看文件变更信息
 
+## git reset --hard 版本号
+1. 回退到指定版本（可用git reflog 查看版本号）
+2. 回退到上次 hard^
 
