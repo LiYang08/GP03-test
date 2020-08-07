@@ -59,5 +59,5 @@
 2. $ git remote add origin https://github.com/LiYang08/GP03-test.git
 
 ## 更新代码
-1. 把远程代码更新到本地时，一定要养成先提交在更新的习惯
+1. 把远程代码更新到本地时，一定要养成先提交（本地），在更新的习惯
 2. git pull 把远程代码拉取到本地
