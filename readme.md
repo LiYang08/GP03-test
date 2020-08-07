@@ -57,6 +57,7 @@
 ## git remote rm origin 
 1. 删除输错的远程仓库
 2. $ git remote add origin https://github.com/LiYang08/GP03-test.git
+3. 可以切换SSH
 
 ## 更新代码
 1. 把远程代码更新到本地时，一定要养成先提交（本地），在更新的习惯
@@ -77,3 +78,4 @@
 
 ## git branch -d 分支名
 1. 删除分支
+
