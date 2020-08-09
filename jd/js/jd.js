@@ -1,3 +1,9 @@
+/* 加载文件 */
+import lunbo from "./lunbo.js";
+import {$1,$2,pajax, animate}from "./utils.js";
+import "./jquery-1.8.3.js";
+import "./carousel.js";
+// import opa from './jqopa';
 //顶部 通过wrapTop委托事件
 
 //*********** 变量定义区************
@@ -11,15 +17,18 @@ var posLocal = document.querySelector(".posLocal");
 var proDis_l = document.querySelector(".proDis_l"); //产品展示
 wrapTop.addEventListener("mouseenter", mouseenterHandler, true);
 wrapTop.addEventListener("mouseleave", mouseenterHandler, true);
-// proDis_l.addEventListener("mouseenter",mouseenterHandler1,true)
-// proDis_l.addEventListener("mouseleave",mouseenterHandler1,true)
 wrapTop.addEventListener("click", clickHandler);
 var aCon = document.querySelectorAll(".topRight a");
 var cate_menu = $1(".cate_menu");
 
 // *********** 变量定义区结束************
 
-
+// 秒杀倒计时
+count_down(2,".countdown-desc strong",{
+    hour:".hour",
+    mins:".mins",
+    seco:".seco" 
+});
 
 /* 数据加载 */
  //*****菜单加载 *****/
@@ -135,10 +144,10 @@ function mouseenterHandler(ev) {
         });
     });
 
-    // $(".proDis_l").on("mouseleave",function () {
-    //     var index = $('.cate_menu_item').index(this);
-    //     $('.proDisPos').css('display','none');
-    // });
+    $(".proDis_l").on("mouseleave",function () {
+        var index = $('.cate_menu_item').index(this);
+        $('.proDisPos').css('display','none');
+    });
 
    
 
@@ -163,7 +172,145 @@ function clickHandler(ev) {
     }
 }
 
+
+//两张图片左右
+(function() {
+    var seckill = $1('.seckill-brand');
+    var brandCon = $1('.brandCon');
+    var branditem = $1('.brand-item').clientWidth;
+    var pageNum = $2('.pageNum li');
+    var aa = new lunbo({
+        scroller: seckill,
+        imgPar: brandCon,
+        lbDir: true,
+        autoFlag: true,
+        clietSize: branditem,
+        pageIn: {
+            pageAll: pageNum,
+            cname: "pageshow"
+        }
+    });
+})();
+
+
+//三张图左右
+    $(".imgCon").opa({
+        imgAll: ".imgCon img",
+        prev: ".car_btn_left",
+        next: ".car_btn_right",
+        pages: ".car_page",
+        type: 'mouseenter',
+        //elemt:"li", //默认li
+        imgclassName: 'imgshow',
+        pageclassName: 'sel'
+    });
+
+
+(function () { 
+    var seckill = $1('.slider_scroll');
+    var brandCon = $1('.sli_list_con');
+    var slider_list = $1('.slider_list');
+    var next = $1('.sk_next');
+    var prev = $1('.sk_prev');
+    var branditem = $1('.sli_group').clientWidth;
+    var aa = new lunbo({
+        scroller: seckill,
+        imgPar: brandCon,
+        btnPr:prev,
+        btnNx:next,
+        lbDir: true,
+        autoFlag: true,
+        clietSize: branditem,
+        stopDom:slider_list
+    });
+ })();
+
+
+ //缓缓上升效果
+
+$(".jd_service").on("mouseenter","ul li a",function (e) {
+   var itemChange = $(this).find("h3").find("span").html();
+   if(itemChange == "话费"){
+       console.log("ok !!!")
+       var $a = $('.opera_service')[0];
+       animate($a, { 'bottom': 0 },function(){
+            $a.style.display="block";
+       });
+   }
+});
+
 /* User-Defined Functions */
+//倒计时 在输入时间的基础上增加 N 个小时，开始倒计时
+/* 
+
+     Ti:2,//两小时倒计时
+     cn:"countTime";
+
+*/
+function count_down(Ti,session,cn) { 
+    var count = Ti || 2;
+    var countDownHour =0;//倒计时 小时
+    var countDownMins =0;//倒计时 分钟
+    var countDownseco =0;//倒计时 秒
+    var timer;//定时器
+    var t = new Date();
+    var year_n = t.getFullYear(); //年
+    var month_n = t.getMonth(); //月
+    var day_n = t.getDate();//日
+    var evenHour = t.getHours();//时
+    if(evenHour%2 === 0){
+        var tempH = supplement(evenHour);
+        $(".countdown-desc strong").html(tempH+":00");//获取倒计时场次
+    }else{
+        evenHour -=1;
+        if(evenHour<10){
+            var str = "0"+evenHour+":00";
+        }else{
+            var str = evenHour+":00";
+        }
+        $(".countdown-desc strong").html(str);//获取倒计时场次
+    }
+    var timeStr = year_n+"/"+(month_n+1)+"/"+day_n+" "+evenHour+":00:00";
+    var d = new Date(timeStr);
+    var sessionStamp = d.getTime();//当前场次开始的时间戳
+    var sessionStampEnd = sessionStamp + 2*60*60*1000;//倒计时结束的时间戳
+    clearInterval(timer); 
+    timer = setInterval(function(){
+        var nTimes = new Date();
+        var nTimesStamp = nTimes.getTime();
+        var delta = sessionStampEnd-nTimesStamp;
+        countDownHour = parseInt(delta/3600000);
+        countDownMins = parseInt(delta/60000)%60;
+        countDownseco = parseInt(delta/1000)-countDownMins*60-countDownHour*3600;
+        var temp1 = supplement(countDownHour);
+        var temp2 = supplement(countDownMins);
+        var temp3 = supplement(countDownseco);
+        $(cn.hour).html(temp1); 
+        $(cn.mins).html(temp2); 
+        $(cn.seco).html(temp3); 
+        if(delta<=0){
+            clearInterval(timer);
+            count_down(2,".countdown-desc strong",{
+                hour:".hour",
+                mins:".mins",
+                seco:".seco" 
+            });
+        }
+    },1000)
+    
+ }
+
+//时间补位 1 => 01
+function supplement(ele) { 
+    var num = Number(ele);
+    if(num<10){
+        var str = "0"+num;
+    }else{
+        var str = num;
+    }
+    return str
+}
+
 //鼠标划入
 function enterStyle(dom, dom1) {
     dom.style.display = "block";
@@ -193,74 +340,5 @@ function colorChange(aCon, newColor) {
         }
     }
 }
-//两张图片左右
-(function() {
-    var seckill = $1('.seckill-brand');
-    var brandCon = $1('.brandCon');
-    var branditem = $1('.brand-item').clientWidth;
-    var pageNum = $2('.pageNum li');
-    var aa = new lunbo({
-        scroller: seckill,
-        imgPar: brandCon,
-        lbDir: true,
-        autoFlag: true,
-        clietSize: branditem,
-        pageIn: {
-            pageAll: pageNum,
-            cname: "pageshow"
-        }
-    });
-})();
 
-//三张图片左右
-// (function() {
-//     var seckill = $1('.carmin-main');
-//     var brandCon = $1('.carmin-content');
-//     var branditem = $1('.carmin_item').clientWidth;
-//     var aa = new lunbo({
-//         scroller: seckill,
-//         imgPar: brandCon,
-//         lbDir: true,
-//         autoFlag: true,
-//         clietSize: branditem,
-//     });
-// })();
 
-    $(".imgCon").opa({
-        imgAll: ".imgCon img",
-        prev: ".car_btn_left",
-        next: ".car_btn_right",
-        pages: ".car_page",
-        type: 'mouseenter',
-        //elemt:"li", //默认li
-        imgclassName: 'imgshow',
-        pageclassName: 'sel'
-    });
-
-    //  var $carmin_content = $(".carmin-content");
-    //  $carmin_content.opa({
-    //     imgAll: ".carmin-content div",
-    //     prev: ".bl2",
-    //     next: ".br2",
-    //     imgclassName: 'carmin_item',
-    // });
-
-(function () { 
-    var seckill = $1('.slider_scroll');
-    var brandCon = $1('.sli_list_con');
-    var slider_list = $1('.slider_list');
-    var next = $1('.sk_next');
-    var prev = $1('.sk_prev');
-    var branditem = $1('.sli_group').clientWidth;
-    var aa = new lunbo({
-        scroller: seckill,
-        imgPar: brandCon,
-        btnPr:prev,
-        btnNx:next,
-        lbDir: true,
-        autoFlag: true,
-        clietSize: branditem,
-        stopDom:slider_list
-    });
- })();
- 

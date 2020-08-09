@@ -1,9 +1,11 @@
+import {animate} from "./utils.js";
+import "./jquery-1.8.3.js";
 $.fn.extend({
     opa: function(obj) {
-        $imgs = $(obj.imgAll);
-        $btn_left = $(obj.prev) || false;
-        $btn_right = $(obj.next) || false;
-        $pageindex = $(obj.pages) || false;
+        var $imgs = $(obj.imgAll);
+        var $btn_left = $(obj.prev) || false;
+        var $btn_right = $(obj.next) || false;
+        var $pageindex = $(obj.pages) || false;
         var fntype = obj.type || "click";
         var elet = obj.elemt || 'li';
         var imgclass = obj.imgclassName;
@@ -103,4 +105,5 @@ $.fn.extend({
 
     }
 });
+export default $.fn.opa;
 // $('.box').opa()

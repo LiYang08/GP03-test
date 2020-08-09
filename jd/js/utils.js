@@ -457,3 +457,5 @@ function removeCookie(key){
         days: -5
     });
 }
+
+export {$1,$2,animate,pajax};

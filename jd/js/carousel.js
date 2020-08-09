@@ -1,3 +1,4 @@
+import {animate} from "./utils.js";
 (function() {
     var imgCon = document.querySelector(".carmin-content");
     var imgs = document.querySelectorAll(".carmin-content div");

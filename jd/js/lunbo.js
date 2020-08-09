@@ -1,3 +1,4 @@
+import {$1,$2,animate} from "./utils.js";
 class lunbo {
     constructor(obj) {
         //滚动条元素
@@ -142,3 +143,4 @@ class lunbo {
         }
     }
 }
+export default lunbo;
